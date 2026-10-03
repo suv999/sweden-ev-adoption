@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "0488749e1149383a67f1",
+  "position": {
+    "x": 648,
+    "y": 88,
+    "z": 2002,
+    "height": 110,
+    "width": 296,
+    "tabOrder": 2002
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Private BEV Share"
+                }
+              },
+              "queryRef": "_Measures.Private BEV Share",
+              "nativeQueryRef": "Private BEV Share",
+              "displayName": "BEV share, private buyers"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

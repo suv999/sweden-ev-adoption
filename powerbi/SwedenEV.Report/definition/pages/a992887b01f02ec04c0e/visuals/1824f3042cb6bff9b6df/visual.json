@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "1824f3042cb6bff9b6df",
+  "position": {
+    "x": 1040,
+    "y": 16,
+    "z": 1001,
+    "height": 56,
+    "width": 216,
+    "tabOrder": 1001
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_fuel"
+                    }
+                  },
+                  "Property": "Fuel"
+                }
+              },
+              "queryRef": "dim_fuel.Fuel",
+              "nativeQueryRef": "Fuel",
+              "displayName": "Fuel type",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
