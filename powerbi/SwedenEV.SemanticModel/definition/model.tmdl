@@ -11,5 +11,14 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
+annotation PBI_QueryOrder = ["DataFolder","national_monthly_long","fact_county_monthly","dim_county"]
+
+ref table national_monthly_long
+ref table fact_county_monthly
+ref table dim_county
+ref table dim_date
+ref table dim_fuel
+ref table _Measures
+
 ref cultureInfo en-US
 

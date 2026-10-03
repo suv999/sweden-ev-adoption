@@ -1,0 +1,52 @@
+table dim_fuel
+	lineageTag: 29ffc279-b12a-4164-929a-8da8395b53f2
+
+	column fuel_type
+		dataType: string
+		lineageTag: f03e061b-2c4a-4494-b96b-25cedd00853f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [fuel_type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fuel
+		dataType: string
+		lineageTag: 685da76e-3627-48e5-be3f-a7fc31237b39
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Fuel]
+		sortByColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cb4bdf5e-5d43-4c92-b0d9-cfccda1eba8e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_fuel = calculated
+		mode: import
+		source =
+				DATATABLE (
+					"fuel_type", STRING,
+					"Fuel", STRING,
+					"Sort", INTEGER,
+					{
+						{ "BEV", "BEV", 1 },
+						{ "PHEV", "PHEV", 2 },
+						{ "HEV", "HEV", 3 },
+						{ "PETROL", "Petrol", 4 },
+						{ "DIESEL", "Diesel", 5 },
+						{ "ETHANOL", "Ethanol", 6 },
+						{ "GAS", "Gas", 7 },
+						{ "OTHER", "Other", 8 }
+					}
+				)
+

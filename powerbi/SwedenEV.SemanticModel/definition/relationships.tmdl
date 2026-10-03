@@ -1,0 +1,20 @@
+relationship 0e5472a3-0595-49fd-a9ea-ee7de9933b02
+	fromColumn: national_monthly_long.month
+	toColumn: dim_date.Date
+
+relationship 70b23b0f-25dc-4313-b894-d1c638360153
+	fromColumn: fact_county_monthly.month
+	toColumn: dim_date.Date
+
+relationship 8511306b-f38a-4196-a217-786f5a80b34c
+	fromColumn: fact_county_monthly.county_code
+	toColumn: dim_county.county_code
+
+relationship 89be1154-e44b-46dd-b7c1-0dd97e2be1a0
+	fromColumn: fact_county_monthly.fuel_type
+	toColumn: dim_fuel.fuel_type
+
+relationship a95b0fb4-afdf-4fdb-b651-dc00bbc9b7ce
+	fromColumn: national_monthly_long.fuel_type
+	toColumn: dim_fuel.fuel_type
+

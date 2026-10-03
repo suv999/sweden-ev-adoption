@@ -1,0 +1,138 @@
+table _Measures
+	lineageTag: 835259e2-db53-4039-b6d3-818217ee8c78
+
+	/// New passenger-car registrations (county fact, 2021 onwards, all owners unless filtered).
+	measure Registrations = SUM ( fact_county_monthly[registrations] )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: 7606a554-d3cc-4ab8-8cbb-b6201abc743d
+
+	/// Battery-electric registrations; ignores the fuel slicer.
+	measure 'BEV Registrations' = CALCULATE ( [Registrations], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "BEV" )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: 36781c99-0380-4a9c-b94c-521cc952d372
+
+	/// All registrations in the current context with fuel filters removed (share denominator).
+	measure 'Registrations All Fuels' = CALCULATE ( [Registrations], REMOVEFILTERS ( fact_county_monthly[fuel_type] ), REMOVEFILTERS ( dim_fuel ) )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: a6c6a486-c1c2-4321-8518-140fd2ce78c0
+
+	/// BEV registrations / all registrations (all 8 fuels), ratio of sums.
+	measure 'BEV Share' = DIVIDE ( [BEV Registrations], [Registrations All Fuels] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: a3e2a973-60a2-423a-8582-cffdf8d149d4
+
+	/// PHEV registrations / all registrations (all 8 fuels), ratio of sums.
+	measure 'PHEV Share' = DIVIDE ( CALCULATE ( [Registrations], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "PHEV" ), [Registrations All Fuels] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 5b753265-4bca-40d2-a837-5559b891e4b3
+
+	/// BEV + PHEV registrations / all registrations; labelled plug-in, never the headline.
+	measure 'Plug-in Share' = DIVIDE ( CALCULATE ( [Registrations], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] IN { "BEV", "PHEV" } ), [Registrations All Fuels] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: dbac54bf-d5cb-4142-a6d3-3964224eec57
+
+	/// BEV share among private buyers (owner_type = private), the headline metric.
+	measure 'Private BEV Share' = CALCULATE ( [BEV Share], fact_county_monthly[owner_type] = "private" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 1681059e-7f6b-4139-a301-41ae7bcd1b3c
+
+	/// BEV share among company/leasing buyers (owner_type = company).
+	measure 'Company BEV Share' = CALCULATE ( [BEV Share], fact_county_monthly[owner_type] = "company" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 22e6bcef-02f1-4e79-9d81-43a5a2b829ef
+
+	/// BEV share for the same months one year earlier, capped at the last month with data (so Jan-Aug 2026 compares with Jan-Aug 2025).
+	measure 'BEV Share PY' =
+			VAR LastDay = EOMONTH ( CALCULATE ( MAX ( fact_county_monthly[month] ), REMOVEFILTERS () ), 0 )
+			VAR Shifted =
+				SELECTCOLUMNS (
+					FILTER ( VALUES ( dim_date[Date] ), dim_date[Date] <= LastDay ),
+					"Date", EDATE ( dim_date[Date], -12 )
+				)
+			RETURN
+				CALCULATE ( [BEV Share], REMOVEFILTERS ( dim_date ), TREATAS ( Shifted, dim_date[Date] ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 30d40d73-4e27-454a-b073-46fbc787bf3a
+
+	/// Change in BEV share versus the same period a year earlier, in pp; with no date filter it compares the latest year to date.
+	measure 'BEV Share YoY (pp)' =
+			VAR LatestYear = YEAR ( CALCULATE ( MAX ( fact_county_monthly[month] ), REMOVEFILTERS () ) )
+			VAR DateFiltered = ISCROSSFILTERED ( dim_date )
+			VAR Cur = IF ( DateFiltered, [BEV Share], CALCULATE ( [BEV Share], dim_date[Year] = LatestYear ) )
+			VAR Prev = IF ( DateFiltered, [BEV Share PY], CALCULATE ( [BEV Share PY], dim_date[Year] = LatestYear ) )
+			RETURN
+				IF ( ISBLANK ( Cur ) || ISBLANK ( Prev ), BLANK (), ( Cur - Prev ) * 100 )
+		formatString: +0.0" pp";-0.0" pp";0.0" pp"
+		displayFolder: County fact
+		lineageTag: 7be412dc-809d-486b-9b61-96d58ddaa936
+
+	/// BEV share over the 12 months ending at the last month with data in context (ratio of sums).
+	measure 'BEV Share Rolling 12M' =
+			VAR LastM = CALCULATE ( MAX ( fact_county_monthly[month] ), REMOVEFILTERS ( dim_fuel ) )
+			VAR FirstM = CALCULATE ( MIN ( fact_county_monthly[month] ), REMOVEFILTERS () )
+			RETURN
+				IF (
+					NOT ( ISBLANK ( LastM ) ) && EDATE ( FirstM, 11 ) <= LastM,
+					CALCULATE (
+						[BEV Share],
+						REMOVEFILTERS ( dim_date ),
+						DATESINPERIOD ( dim_date[Date], EOMONTH ( LastM, 0 ), -12, MONTH )
+					)
+				)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: d9a3bd95-020f-4ebe-93d3-fdf8370a7a93
+
+	/// Average registrations per month across the months in context (seasonality).
+	measure 'Avg Monthly Registrations' = AVERAGEX ( VALUES ( dim_date[YearMonth] ), [Registrations] )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: 5349ad1b-084f-427e-a399-fbab749c93d7
+
+	/// New registrations from the national series (2006 onwards, all owners).
+	measure 'National Registrations' = SUM ( national_monthly_long[registrations] )
+		formatString: #,0
+		displayFolder: National
+		lineageTag: 3347d52e-b167-4536-8521-d32772c4cad6
+
+	/// Fuel's share of national registrations (all owners), ratio of sums; use with dim_fuel on the legend.
+	measure 'National Share' = DIVIDE ( [National Registrations], CALCULATE ( [National Registrations], REMOVEFILTERS ( national_monthly_long[fuel_type] ), REMOVEFILTERS ( dim_fuel ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: National
+		lineageTag: 410dd3b3-3a74-48dc-90a5-f03473b9b653
+
+	/// BEV share of national registrations, all owners, 2006 onwards.
+	measure 'National BEV Share' = CALCULATE ( [National Share], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "BEV" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: National
+		lineageTag: cc89f723-f114-43ce-926c-77a651a63d5b
+
+	/// PHEV share of national registrations, all owners, 2006 onwards.
+	measure 'National PHEV Share' = CALCULATE ( [National Share], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "PHEV" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: National
+		lineageTag: 8e027dbe-a9d2-46bf-9086-5e797929de2a
+
+	column Value
+		dataType: int64
+		isHidden
+		lineageTag: 46d3d583-df62-4d33-a069-db044989fd25
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = { BLANK () }
+
