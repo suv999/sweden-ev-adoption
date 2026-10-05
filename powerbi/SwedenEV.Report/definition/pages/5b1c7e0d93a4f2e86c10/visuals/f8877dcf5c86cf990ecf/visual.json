@@ -4,10 +4,10 @@
   "position": {
     "x": 24,
     "y": 88,
-    "z": 2000,
+    "z": 3000,
     "height": 296,
     "width": 608,
-    "tabOrder": 2000
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "lineChart",
@@ -28,8 +28,8 @@
               },
               "queryRef": "dim_date.Date",
               "nativeQueryRef": "Date",
-              "displayName": "Month",
-              "active": true
+              "active": true,
+              "displayName": "Month"
             }
           ]
         },
@@ -109,7 +109,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'BottomCenter'"
                 }
               }
             },

@@ -4,10 +4,10 @@
   "position": {
     "x": 24,
     "y": 214,
-    "z": 3000,
+    "z": 7000,
     "height": 482,
     "width": 608,
-    "tabOrder": 3000
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "lineChart",
@@ -32,6 +32,24 @@
             }
           ]
         },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_fuel"
+                    }
+                  },
+                  "Property": "Fuel"
+                }
+              },
+              "queryRef": "dim_fuel.Fuel",
+              "nativeQueryRef": "Fuel"
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -48,24 +66,6 @@
               "queryRef": "_Measures.National Share",
               "nativeQueryRef": "National Share",
               "displayName": "Share of new cars"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_fuel"
-                    }
-                  },
-                  "Property": "Fuel"
-                }
-              },
-              "queryRef": "dim_fuel.Fuel",
-              "nativeQueryRef": "Fuel"
             }
           ]
         }
@@ -111,7 +111,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'BottomCenter'"
                 }
               }
             },

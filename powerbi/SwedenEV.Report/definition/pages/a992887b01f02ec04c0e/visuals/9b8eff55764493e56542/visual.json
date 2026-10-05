@@ -28,8 +28,8 @@
               },
               "queryRef": "dim_date.Year",
               "nativeQueryRef": "Year",
-              "displayName": "Year",
-              "active": true
+              "active": true,
+              "displayName": "Year"
             }
           ]
         }
@@ -47,6 +47,11 @@
               }
             }
           }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
         }
       ]
     },

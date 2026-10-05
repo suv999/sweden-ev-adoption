@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "ffed130e0be88e232419",
   "position": {
-    "x": 648,
-    "y": 214,
-    "z": 3001,
-    "height": 482,
-    "width": 608,
-    "tabOrder": 3001
+    "x": 648.63984804287361,
+    "y": 214.12929923343057,
+    "z": 8000,
+    "height": 481.40017637880737,
+    "width": 608.00217081609117,
+    "tabOrder": 8000
   },
   "visual": {
     "visualType": "columnChart",
@@ -32,6 +32,24 @@
             }
           ]
         },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_fuel"
+                    }
+                  },
+                  "Property": "Fuel"
+                }
+              },
+              "queryRef": "dim_fuel.Fuel",
+              "nativeQueryRef": "Fuel"
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -48,24 +66,6 @@
               "queryRef": "_Measures.National Registrations",
               "nativeQueryRef": "National Registrations",
               "displayName": "Registrations"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_fuel"
-                    }
-                  },
-                  "Property": "Fuel"
-                }
-              },
-              "queryRef": "dim_fuel.Fuel",
-              "nativeQueryRef": "Fuel"
             }
           ]
         }
@@ -111,7 +111,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'BottomCenter'"
                 }
               }
             },

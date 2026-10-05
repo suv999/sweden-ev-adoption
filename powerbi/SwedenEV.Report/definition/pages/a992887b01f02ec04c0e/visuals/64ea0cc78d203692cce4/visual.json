@@ -21,8 +21,8 @@
                   {
                     "value": "Sweden's shift to battery-electric cars",
                     "textStyle": {
-                      "fontSize": "18pt",
                       "fontWeight": "bold",
+                      "fontSize": "18pt",
                       "color": "#0b0b0b"
                     }
                   }
@@ -34,7 +34,6 @@
                     "value": "Source: Trafikanalys new registrations, data through Aug 2026 (2026 = Jan–Aug). All owners unless stated.",
                     "textStyle": {
                       "fontSize": "10pt",
-                      "fontWeight": "normal",
                       "color": "#52514e"
                     }
                   }
