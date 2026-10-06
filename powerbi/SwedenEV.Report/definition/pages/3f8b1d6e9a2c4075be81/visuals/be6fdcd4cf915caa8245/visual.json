@@ -33,6 +33,24 @@
             }
           ]
         },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Population"
+                }
+              },
+              "queryRef": "_Measures.Population",
+              "nativeQueryRef": "Population"
+            }
+          ]
+        },
         "X": {
           "projections": [
             {
@@ -48,6 +66,7 @@
               },
               "queryRef": "_Measures.Median Income (tkr)",
               "nativeQueryRef": "Median Income (tkr)",
+              "active": true,
               "displayName": "Median income t−1 (tkr)"
             }
           ]
@@ -68,24 +87,6 @@
               "queryRef": "_Measures.Private BEV Share",
               "nativeQueryRef": "Private BEV Share",
               "displayName": "Private BEV share"
-            }
-          ]
-        },
-        "Size": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Population"
-                }
-              },
-              "queryRef": "_Measures.Population",
-              "nativeQueryRef": "Population"
             }
           ]
         }

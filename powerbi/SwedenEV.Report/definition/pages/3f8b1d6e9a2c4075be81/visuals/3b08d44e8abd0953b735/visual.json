@@ -48,6 +48,7 @@
               },
               "queryRef": "_Measures.Population Density",
               "nativeQueryRef": "Population Density",
+              "active": true,
               "displayName": "People per km² (log scale)"
             }
           ]
