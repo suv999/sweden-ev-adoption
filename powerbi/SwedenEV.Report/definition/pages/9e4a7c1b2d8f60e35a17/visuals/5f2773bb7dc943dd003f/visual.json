@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "5f2773bb7dc943dd003f",
   "position": {
-    "x": 840,
-    "y": 480,
+    "x": 839.324333491622,
+    "y": 479.83718879316194,
     "z": 2002,
-    "height": 216,
-    "width": 416,
+    "height": 215.69228681907603,
+    "width": 417.31768536734279,
     "tabOrder": 2002
   },
   "visual": {
@@ -21,8 +21,8 @@
                   {
                     "value": "How to read the scenarios",
                     "textStyle": {
-                      "fontSize": "12pt",
                       "fontWeight": "bold",
+                      "fontSize": "12pt",
                       "color": "#0b0b0b"
                     }
                   }
@@ -31,10 +31,62 @@
               {
                 "textRuns": [
                   {
-                    "value": "Plateau (central): the 2026 level holds, no further growth. Reversion (downside): the 2026 rise fades back to the flat post-bonus trend. Momentum (upside): the 2026 restart continues along an S-curve.",
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Plateau (central)",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "10pt",
+                      "color": "#52514e"
+                    }
+                  },
+                  {
+                    "value": ": the 2026 level holds, no further growth. ",
                     "textStyle": {
                       "fontSize": "10pt",
-                      "fontWeight": "normal",
+                      "color": "#52514e"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Reversion (downside)",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "10pt",
+                      "color": "#52514e"
+                    }
+                  },
+                  {
+                    "value": ": the 2026 rise fades back to the flat post-bonus trend. ",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#52514e"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Momentum (upside)",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "10pt",
+                      "color": "#52514e"
+                    }
+                  },
+                  {
+                    "value": ": the 2026 restart continues along an S-curve.",
+                    "textStyle": {
+                      "fontSize": "10pt",
                       "color": "#52514e"
                     }
                   }
@@ -46,7 +98,6 @@
                     "value": "In backtests no model foresaw the 2026 restart, and models extrapolating a slope were wrong at both forecast origins, so treat the intervals as lower bounds on the real uncertainty.",
                     "textStyle": {
                       "fontSize": "10pt",
-                      "fontWeight": "normal",
                       "color": "#52514e"
                     }
                   }

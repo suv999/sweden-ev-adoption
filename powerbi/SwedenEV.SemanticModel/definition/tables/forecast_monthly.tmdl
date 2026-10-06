@@ -1,9 +1,11 @@
 table forecast_monthly
+	lineageTag: 69c9b16c-c6d4-40a8-9b38-921886825adc
 
 	column month
 		dataType: dateTime
 		isHidden
 		formatString: Long Date
+		lineageTag: fc977a27-e3a2-415e-bdfb-4192683ebbc6
 		summarizeBy: none
 		sourceColumn: month
 
@@ -14,6 +16,7 @@ table forecast_monthly
 	column scenario
 		dataType: string
 		isHidden
+		lineageTag: bf9d7cde-bc3d-40cb-9c57-eea0b022c9b6
 		summarizeBy: none
 		sourceColumn: scenario
 
@@ -23,6 +26,7 @@ table forecast_monthly
 		dataType: double
 		isHidden
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 0119f4c0-0fa4-4241-81fa-6ad28b95cdc5
 		summarizeBy: none
 		sourceColumn: p10
 
@@ -32,6 +36,7 @@ table forecast_monthly
 		dataType: double
 		isHidden
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 3f86dc4b-1fd5-4ad0-883a-20aa8e7be639
 		summarizeBy: none
 		sourceColumn: p50
 
@@ -41,6 +46,7 @@ table forecast_monthly
 		dataType: double
 		isHidden
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 6b9517a3-e57f-4056-bb05-a86e71b7e249
 		summarizeBy: none
 		sourceColumn: p90
 

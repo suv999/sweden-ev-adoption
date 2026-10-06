@@ -1,7 +1,9 @@
 table forecast_annual
+	lineageTag: a6b6773f-d4d0-4a58-a413-e000d9f24711
 
 	column scenario
 		dataType: string
+		lineageTag: 488b1e03-0d52-4990-b8ef-a2882da3ceb3
 		summarizeBy: none
 		sourceColumn: scenario
 		sortByColumn: scenario_order
@@ -12,6 +14,7 @@ table forecast_annual
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 5d45c94e-34f8-4e79-9c30-937ea8de988a
 		summarizeBy: none
 		sourceColumn: scenario_order
 
@@ -19,6 +22,7 @@ table forecast_annual
 
 	column assumption
 		dataType: string
+		lineageTag: c907acb1-9b73-4216-b1e4-fd958b40e7a8
 		summarizeBy: none
 		sourceColumn: assumption
 
@@ -27,6 +31,7 @@ table forecast_annual
 	column year
 		dataType: int64
 		formatString: 0
+		lineageTag: de93a0c2-53a0-4da2-b9aa-ee69ef470683
 		summarizeBy: none
 		sourceColumn: year
 
@@ -35,6 +40,7 @@ table forecast_annual
 	column median
 		dataType: double
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2980e0f9-8e09-40fe-b95f-7872c22693b2
 		summarizeBy: none
 		sourceColumn: median
 
@@ -43,6 +49,7 @@ table forecast_annual
 	column p10
 		dataType: double
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 96a2db39-8e65-47c3-aa3b-e6cd3abfbf82
 		summarizeBy: none
 		sourceColumn: p10
 
@@ -51,6 +58,7 @@ table forecast_annual
 	column p90
 		dataType: double
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 68f126b3-bcb9-4c55-b980-a930484e7120
 		summarizeBy: none
 		sourceColumn: p90
 
@@ -59,6 +67,7 @@ table forecast_annual
 	column p2_5
 		dataType: double
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5a00698a-fca1-4655-b085-6f1a527ae8ac
 		summarizeBy: none
 		sourceColumn: p2_5
 
@@ -67,6 +76,7 @@ table forecast_annual
 	column p97_5
 		dataType: double
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 840cf0a4-1b58-4415-8a45-2e4cb8a520e8
 		summarizeBy: none
 		sourceColumn: p97_5
 
