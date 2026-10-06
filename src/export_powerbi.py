@@ -8,16 +8,22 @@ Reads data/processed/ (built by src/build_dataset.py) and writes powerbi/data/:
   county_year_panel.csv      county_year_panel.csv + median_income_lag_tkr (income t-1, as in notebook 02)
   regression_results.csv     notebook 02's county panel regressions, rescaled to pp
   regional_key_numbers.csv   headline regional findings from notebook 02
+  forecast_monthly.csv       notebook 04 scenarios: rolling-12 private BEV share, p10/p50/p90, Aug 2026-Dec 2028
+  forecast_annual.csv        notebook 04 scenarios: annual private BEV share 2026-2028 with 80% and 95% intervals
 
-The regressions repeat the specification in notebooks/02_regional.ipynb (section 5) so the
-dashboard shows the same numbers; the asserts below fail if they drift apart.
+The regressions repeat notebooks/02_regional.ipynb (section 5) and the forecasts repeat
+notebooks/04_forecast.ipynb (sections 3 and 5, same models and random seeds), so the dashboard shows
+the same numbers; the asserts below fail if they drift apart.
 
 Run from the repo root:  python src/export_powerbi.py
 """
 from pathlib import Path
+import warnings
 import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+from statsmodels.tsa.statespace.structural import UnobservedComponents
 
 ROOT = Path(__file__).resolve().parents[1]
 PROC, OUT = ROOT / "data" / "processed", ROOT / "powerbi" / "data"
@@ -121,6 +127,73 @@ keys = pd.DataFrame([
 ])
 keys.to_csv(OUT / "regional_key_numbers.csv", index=False, encoding="utf-8")
 
+# ---------- forecast scenarios (notebook 04, sections 3 and 5) ----------
+warnings.filterwarnings("ignore", module="statsmodels")
+pw = fact[fact.owner_type == "private"].assign(month=lambda d: pd.to_datetime(d.month)) \
+         .pivot_table(index="month", columns="fuel_type", values="registrations", aggfunc="sum", fill_value=0)
+pv = pd.DataFrame({"bev": pw["BEV"], "total": pw.sum(axis=1)}).asfreq("MS")
+pv["share"] = pv.bev / pv.total
+pv["logit"] = np.log(pv.share / (1 - pv.share))
+T0, LAST = pd.Timestamp("2023-01-01"), pv.index.max()
+HORIZON = pd.date_range(LAST + pd.offsets.MonthBegin(1), "2028-12-01", freq="MS")
+train = pv.loc[T0:]
+
+
+def month_dummies(idx):
+    return pd.get_dummies(idx.month, prefix="m", drop_first=True, dtype=float).set_index(idx)
+
+
+t_train = pd.Series(np.arange(len(train)) / 12, index=train.index, name="t")   # years since Jan 2023
+t_fut = pd.Series(np.arange(len(train), len(train) + len(HORIZON)) / 12, index=HORIZON, name="t")
+models = {"Plateau": UnobservedComponents(train.logit, level="llevel", exog=month_dummies(train.index)),
+          "Reversion": SARIMAX(train.logit, exog=month_dummies(train.index).join(t_train), order=(1, 0, 0), trend="c"),
+          "Momentum": UnobservedComponents(train.logit, level="lltrend", exog=month_dummies(train.index))}
+paths = {}
+for i, (name, m) in enumerate(models.items()):
+    res = m.fit(disp=False, maxiter=2000)
+    assert res.mle_retvals["converged"], f"{name} did not converge"
+    ex = month_dummies(HORIZON).join(t_fut) if name == "Reversion" else month_dummies(HORIZON)
+    z = res.simulate(len(HORIZON), repetitions=2000, anchor="end", exog=ex, rng=np.random.default_rng(4 + i))
+    paths[name] = 1 / (1 + np.exp(-np.asarray(z).reshape(len(HORIZON), 2000)))
+
+vol = pv.loc["2023":"2025", "total"]
+weights = vol.groupby(vol.index.month).sum() / vol.sum()                      # seasonal volume profile
+vol_rest26 = pv.total.loc["2025-09":"2025-12"].to_numpy() * \
+    (pv.total.loc["2026-01":"2026-08"].sum() / pv.total.loc["2025-01":"2025-08"].sum())
+past = pv.share.loc[LAST - pd.DateOffset(months=10):]
+ASSUMPTION = {"Plateau": "Central case: the 2026 level holds, no further growth",
+              "Reversion": "Downside: the 2026 rise fades back to the flat post-bonus trend",
+              "Momentum": "Upside: the 2026 restart continues along an S-curve"}
+annual_rows, monthly_rows = [], []
+r12_last = pv.bev.loc["2025-09":].sum() / pv.total.loc["2025-09":].sum()
+for order, (name, p) in enumerate(paths.items(), start=1):
+    f = pd.DataFrame(p, index=HORIZON)
+    yearly = {2026: (pv.bev.loc["2026"].sum() + (f.loc["2026"].to_numpy() * vol_rest26[:, None]).sum(0))
+                    / (pv.total.loc["2026"].sum() + vol_rest26.sum())}
+    for yr in (2027, 2028):
+        yearly[yr] = (f.loc[str(yr)].to_numpy() * weights.to_numpy()[:, None]).sum(0)
+    for yr, v in yearly.items():
+        annual_rows.append({"scenario": name, "scenario_order": order, "assumption": ASSUMPTION[name], "year": yr,
+                            "median": np.median(v), "p10": np.percentile(v, 10), "p90": np.percentile(v, 90),
+                            "p2_5": np.percentile(v, 2.5), "p97_5": np.percentile(v, 97.5)})
+    # rolling-12 share of each path stitched to the last 11 actual months, weighted by the seasonal volume profile
+    shares = np.vstack([np.repeat(past.to_numpy()[:, None], p.shape[1], axis=1), p])
+    wts = np.vstack([weights.loc[past.index.month].to_numpy()[:, None], weights.loc[HORIZON.month].to_numpy()[:, None]])
+    roll = pd.DataFrame(shares * wts).rolling(12).sum() / pd.DataFrame(np.repeat(wts, p.shape[1], axis=1)).rolling(12).sum()
+    q = roll.iloc[len(past):].set_axis(HORIZON).quantile([0.1, 0.5, 0.9], axis=1).T
+    # anchor every scenario line at the last actual R12 so it joins the actual series in the chart
+    monthly_rows.append({"month": LAST, "scenario": name, "p10": r12_last, "p50": r12_last, "p90": r12_last})
+    monthly_rows += [{"month": d, "scenario": name, "p10": r[0.1], "p50": r[0.5], "p90": r[0.9]} for d, r in q.iterrows()]
+fc_annual = pd.DataFrame(annual_rows)
+fc_monthly = pd.DataFrame(monthly_rows).assign(month=lambda d: d.month.dt.strftime("%Y-%m-%d"))
+med = fc_annual.set_index(["scenario", "year"])["median"]
+# Must match notebook 04, section 5
+assert [round(med[(s, 2028)] * 100, 1) for s in ("Plateau", "Reversion", "Momentum")] == [41.6, 37.6, 48.6], med
+assert round(med[("Plateau", 2026)] * 100, 1) == 41.1
+assert fc_annual[["median", "p2_5", "p97_5"]].stack().between(0, 1).all()
+fc_annual.round(5).to_csv(OUT / "forecast_annual.csv", index=False, encoding="utf-8")
+fc_monthly.round(5).to_csv(OUT / "forecast_monthly.csv", index=False, encoding="utf-8")
+
 # ---------- checks ----------
 nt = nat_long.groupby("month").registrations.sum()
 ft = fact.groupby("month").registrations.sum()
@@ -142,3 +215,5 @@ print(f"county_year_panel:     {len(panel)} rows ({panel.year.min()}-{panel.year
 print(f"2025 BEV share, all owners: {bev25:.1%}  |  private BEV share R12 to {priv.month.max()[:7]}: {r12:.1%}")
 print("\nregression_results:\n" + reg[["term", "coefficient", "std_error", "p_value"]].to_string(index=False))
 print("\nregional_key_numbers:\n" + keys[["metric", "value", "unit"]].to_string(index=False))
+print("\nforecast_annual (median):\n" + med.unstack().map("{:.1%}".format).to_string())
+print(f"forecast_monthly: {len(fc_monthly)} rows ({fc_monthly.month.min()} -> {fc_monthly.month.max()})")

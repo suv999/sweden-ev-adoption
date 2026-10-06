@@ -1,0 +1,10 @@
+scenario,scenario_order,assumption,year,median,p10,p90,p2_5,p97_5
+Plateau,1,"Central case: the 2026 level holds, no further growth",2026,0.4114,0.39133,0.43162,0.38009,0.44155
+Plateau,1,"Central case: the 2026 level holds, no further growth",2027,0.41085,0.31562,0.51558,0.26896,0.57043
+Plateau,1,"Central case: the 2026 level holds, no further growth",2028,0.41605,0.27872,0.56657,0.21272,0.6418
+Reversion,2,Downside: the 2026 rise fades back to the flat post-bonus trend,2026,0.40278,0.3848,0.42078,0.37507,0.42971
+Reversion,2,Downside: the 2026 rise fades back to the flat post-bonus trend,2027,0.37314,0.33242,0.41672,0.31402,0.43877
+Reversion,2,Downside: the 2026 rise fades back to the flat post-bonus trend,2028,0.37643,0.33384,0.41975,0.31246,0.44501
+Momentum,3,Upside: the 2026 restart continues along an S-curve,2026,0.41496,0.39158,0.43781,0.38021,0.44854
+Momentum,3,Upside: the 2026 restart continues along an S-curve,2027,0.44486,0.30234,0.59548,0.234,0.66186
+Momentum,3,Upside: the 2026 restart continues along an S-curve,2028,0.4864,0.22205,0.75448,0.13353,0.84487
