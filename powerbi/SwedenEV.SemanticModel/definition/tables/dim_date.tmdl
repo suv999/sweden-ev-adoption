@@ -66,6 +66,14 @@ table dim_date
 
 		annotation SummarizationSetBy = Automatic
 
+	/// TRUE for dates up to the end of the last month with registration data.
+	column HasActuals = dim_date[Date] <= EOMONTH ( MAX ( national_monthly_long[month] ), 0 )
+		dataType: boolean
+		lineageTag: afc8f0da-c334-4610-a1ef-4bcce7c6bc40
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_date = calculated
 		mode: import
 		source =

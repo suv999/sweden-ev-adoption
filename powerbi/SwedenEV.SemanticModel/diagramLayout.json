@@ -79,6 +79,58 @@
             "width": 234
           },
           "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1705.9276022325623,
+            "y": 70.995713018483457
+          },
+          "nodeIndex": "county_year_panel",
+          "nodeLineageTag": "26ea2467-7ddc-41e6-a057-fc843d743606",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1421.9276022325623,
+            "y": 144.99571301848346
+          },
+          "nodeIndex": "dim_year",
+          "nodeLineageTag": "554326a0-a98a-4f80-9be4-7d657452145e",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1939.9276022325623,
+            "y": 182.99571301848346
+          },
+          "nodeIndex": "regional_key_numbers",
+          "nodeLineageTag": "91e7b933-67fd-4cd7-8eae-d205e0c16e82",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2223.9276022325621,
+            "y": 158.99571301848346
+          },
+          "nodeIndex": "regression_results",
+          "nodeLineageTag": "734baca6-074c-4e97-b0ba-01f722154da3",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",

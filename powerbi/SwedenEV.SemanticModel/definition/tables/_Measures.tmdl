@@ -122,6 +122,105 @@ table _Measures
 		displayFolder: National
 		lineageTag: 8e027dbe-a9d2-46bf-9086-5e797929de2a
 
+	/// Rank of the county by private BEV share among the counties in the current selection (1 = highest).
+	measure 'County Rank (Private BEV Share)' =
+			VAR Counties = CALCULATETABLE ( VALUES ( dim_county[county_name] ), ALLSELECTED ( dim_county ), KEEPFILTERS ( dim_county[region] <> "" ) )
+			RETURN
+				IF (
+					HASONEVALUE ( dim_county[county_name] ) && NOT ISBLANK ( [Private BEV Share] ),
+					RANKX ( Counties, [Private BEV Share], , DESC, DENSE )
+				)
+		formatString: 0
+		displayFolder: Regional
+		lineageTag: 07aaf85b-4f49-437a-8c78-09f21ef57745
+
+	/// Private BEV share minus company BEV share, in percentage points.
+	measure 'Private–Company BEV Gap (pp)' =
+			VAR P = [Private BEV Share]
+			VAR C = [Company BEV Share]
+			RETURN
+				IF ( ISBLANK ( P ) || ISBLANK ( C ), BLANK (), ( P - C ) * 100 )
+		formatString: +0.0" pp";-0.0" pp";0.0" pp"
+		displayFolder: Regional
+		lineageTag: 2eda36cd-aa29-493b-90cf-dbad2d5e9eb2
+
+	/// Private buyers' share of all new registrations (ratio of sums).
+	measure 'Private Owner %' = DIVIDE ( CALCULATE ( [Registrations], fact_county_monthly[owner_type] = "private" ), CALCULATE ( [Registrations], REMOVEFILTERS ( fact_county_monthly[owner_type] ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Regional
+		lineageTag: 694b283f-0e5c-46a8-b8aa-a86a36dc2fdc
+
+	/// Battery-electric cars in traffic at year end per 1,000 inhabitants (ratio of sums).
+	measure 'BEV Fleet per 1,000 Inhabitants' = DIVIDE ( SUM ( county_year_panel[fleet_bev] ), SUM ( county_year_panel[population] ) ) * 1000
+		formatString: 0.0
+		displayFolder: Regional
+		lineageTag: c1812d6f-9e7c-424d-b554-98b788b78d14
+
+	/// Median earned income age 20-64 in the previous year (t-1, as in notebook 02), thousand SEK.
+	measure 'Median Income (tkr)' = AVERAGE ( county_year_panel[median_income_lag_tkr] )
+		formatString: 0
+		displayFolder: Regional
+		lineageTag: a16125a1-8641-43d0-96d8-9d6cbf2279ca
+
+	/// Population, averaged over the selected years.
+	measure Population = AVERAGEX ( VALUES ( county_year_panel[year] ), CALCULATE ( SUM ( county_year_panel[population] ) ) )
+		formatString: #,0
+		displayFolder: Regional
+		lineageTag: 9d6f8845-a93e-47e8-a6dc-4f9aa006f794
+
+	/// Inhabitants per km² of land (ratio of sums).
+	measure 'Population Density' = DIVIDE ( SUM ( county_year_panel[population] ), SUM ( county_year_panel[land_km2] ) )
+		formatString: #,0.0
+		displayFolder: Regional
+		lineageTag: 0bc6dbd0-ad79-47d8-a292-6801a327585e
+
+	/// County with the highest private BEV share in the selection, with its share (ties at 0.1% are listed together).
+	measure 'Top County (Private BEV Share)' =
+			VAR Scored =
+				FILTER (
+					ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_county[county_name] ), KEEPFILTERS ( dim_county[region] <> "" ) ), "@share", [Private BEV Share] ),
+					NOT ISBLANK ( [@share] )
+				)
+			VAR Best = MAXX ( Scored, [@share] )
+			RETURN
+				IF (
+					NOT ISBLANK ( Best ),
+					CONCATENATEX ( FILTER ( Scored, ROUND ( [@share], 3 ) = ROUND ( Best, 3 ) ), dim_county[county_name], " & ", dim_county[county_name] )
+						& " · " & FORMAT ( Best, "0.0%" )
+				)
+		displayFolder: Regional
+		lineageTag: 573397fb-89e7-40da-8881-e7b5e3b8688f
+
+	/// County with the lowest private BEV share in the selection, with its share (ties at 0.1% are listed together).
+	measure 'Bottom County (Private BEV Share)' =
+			VAR Scored =
+				FILTER (
+					ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_county[county_name] ), KEEPFILTERS ( dim_county[region] <> "" ) ), "@share", [Private BEV Share] ),
+					NOT ISBLANK ( [@share] )
+				)
+			VAR Worst = MINX ( Scored, [@share] )
+			RETURN
+				IF (
+					NOT ISBLANK ( Worst ),
+					CONCATENATEX ( FILTER ( Scored, ROUND ( [@share], 3 ) = ROUND ( Worst, 3 ) ), dim_county[county_name], " & ", dim_county[county_name] )
+						& " · " & FORMAT ( Worst, "0.0%" )
+				)
+		displayFolder: Regional
+		lineageTag: 255903f0-1310-4b16-bb5b-5c7dd4e12eb0
+
+	/// Highest minus lowest county private BEV share in the selection, in percentage points.
+	measure 'Top–Bottom County Gap (pp)' =
+			VAR Scored =
+				FILTER (
+					ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_county[county_name] ), KEEPFILTERS ( dim_county[region] <> "" ) ), "@share", [Private BEV Share] ),
+					NOT ISBLANK ( [@share] )
+				)
+			RETURN
+				IF ( COUNTROWS ( Scored ) > 1, ( MAXX ( Scored, [@share] ) - MINX ( Scored, [@share] ) ) * 100 )
+		formatString: 0.0" pp"
+		displayFolder: Regional
+		lineageTag: ae103236-b15b-44aa-af4d-58d99bdff5d2
+
 	column Value
 		dataType: int64
 		isHidden

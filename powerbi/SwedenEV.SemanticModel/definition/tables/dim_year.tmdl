@@ -1,0 +1,37 @@
+table dim_year
+	lineageTag: 554326a0-a98a-4f80-9be4-7d657452145e
+
+	column Year
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: a2488682-46f3-4b18-8d2d-5553b7d6d326
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// TRUE for years with registration data (2006 to the last data month).
+	column HasActuals = dim_year[Year] <= YEAR ( MAX ( national_monthly_long[month] ) )
+		dataType: boolean
+		lineageTag: af3dd474-32c5-48bb-bc19-0b340167f13e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	/// TRUE for complete calendar years (December has data).
+	column IsFullYear =
+			VAR LastM = MAX ( national_monthly_long[month] )
+			RETURN
+				dim_year[Year] < YEAR ( LastM ) || ( dim_year[Year] = YEAR ( LastM ) && MONTH ( LastM ) = 12 )
+		dataType: boolean
+		lineageTag: a3b8a94f-92f8-42fe-b1d7-88869bbbbbf9
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_year = calculated
+		mode: import
+		source = SELECTCOLUMNS ( GENERATESERIES ( 2006, 2028, 1 ), "Year", [Value] )
+

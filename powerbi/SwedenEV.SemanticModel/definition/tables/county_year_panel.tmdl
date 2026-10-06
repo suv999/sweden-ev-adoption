@@ -1,0 +1,263 @@
+table county_year_panel
+	lineageTag: 26ea2467-7ddc-41e6-a057-fc843d743606
+
+	column county_code
+		dataType: string
+		isHidden
+		lineageTag: 120b1998-904a-40f0-b23d-94f5611b1da3
+		summarizeBy: none
+		sourceColumn: county_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column county_name
+		dataType: string
+		isHidden
+		lineageTag: 04d7d56d-0066-49fd-b9bd-fdf1011eff79
+		summarizeBy: none
+		sourceColumn: county_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f81e3501-abbe-4c35-bc40-8e0732f068ef
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column new_regs_total
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 285525b3-94bd-4395-b3b8-f05582c633fa
+		summarizeBy: sum
+		sourceColumn: new_regs_total
+
+		annotation SummarizationSetBy = Automatic
+
+	column new_bev
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: c17b0a7f-3d16-45b0-99a8-78a129898695
+		summarizeBy: sum
+		sourceColumn: new_bev
+
+		annotation SummarizationSetBy = Automatic
+
+	column new_phev
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: f4dc66c3-b62d-4ae6-9453-95c8cd7a1cc3
+		summarizeBy: sum
+		sourceColumn: new_phev
+
+		annotation SummarizationSetBy = Automatic
+
+	column bev_share_all_owners
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: 8e50ad5d-10fc-4bd6-ab2b-d06a8c83d3e0
+		summarizeBy: sum
+		sourceColumn: bev_share_all_owners
+
+		annotation SummarizationSetBy = Automatic
+
+	column phev_share_all_owners
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: aabece45-a326-419f-b63e-26eefe36551f
+		summarizeBy: sum
+		sourceColumn: phev_share_all_owners
+
+		annotation SummarizationSetBy = Automatic
+
+	column fleet_total
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 68716f3b-098c-46e3-bc3a-e325f1839f8a
+		summarizeBy: sum
+		sourceColumn: fleet_total
+
+		annotation SummarizationSetBy = Automatic
+
+	column fleet_bev
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 4594779e-ae9a-492e-ab3c-6645e0282363
+		summarizeBy: sum
+		sourceColumn: fleet_bev
+
+		annotation SummarizationSetBy = Automatic
+
+	column fleet_bev_share
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: ea827c75-0726-4c22-9f1d-a6dc06d3bd67
+		summarizeBy: sum
+		sourceColumn: fleet_bev_share
+
+		annotation SummarizationSetBy = Automatic
+
+	column private_new_regs
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 40596405-f117-4742-b8d3-78379a5b1ddd
+		summarizeBy: sum
+		sourceColumn: private_new_regs
+
+		annotation SummarizationSetBy = Automatic
+
+	column private_bev_share
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: 10976bb5-8af2-4240-89e1-c91c44066876
+		summarizeBy: sum
+		sourceColumn: private_bev_share
+
+		annotation SummarizationSetBy = Automatic
+
+	column company_new_regs
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: f91c16fc-6675-449a-a323-d713feb4a46b
+		summarizeBy: sum
+		sourceColumn: company_new_regs
+
+		annotation SummarizationSetBy = Automatic
+
+	column company_bev_share
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: 9ff8d8cd-5f86-463f-864a-264dc64b0ba4
+		summarizeBy: sum
+		sourceColumn: company_bev_share
+
+		annotation SummarizationSetBy = Automatic
+
+	column private_phev_share
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: c27ac908-2947-488a-b787-c94c4455b9a1
+		summarizeBy: sum
+		sourceColumn: private_phev_share
+
+		annotation SummarizationSetBy = Automatic
+
+	column private_owner_pct
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: 50cfc079-f6a0-431f-8ad3-8e0aad005c1c
+		summarizeBy: sum
+		sourceColumn: private_owner_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column population
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 1c54b991-668b-432f-9e85-2680500c32b3
+		summarizeBy: sum
+		sourceColumn: population
+
+		annotation SummarizationSetBy = Automatic
+
+	column land_km2
+		dataType: double
+		isHidden
+		formatString: #,0.0
+		lineageTag: f73f4b84-b89c-4e1d-a182-664c2c602e00
+		summarizeBy: sum
+		sourceColumn: land_km2
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_per_km2
+		dataType: double
+		isHidden
+		formatString: #,0.0
+		lineageTag: 8ecc3234-c4dc-4024-80a6-fb6eb3a2b7db
+		summarizeBy: sum
+		sourceColumn: pop_per_km2
+
+		annotation SummarizationSetBy = Automatic
+
+	column median_income_tkr
+		dataType: double
+		isHidden
+		formatString: 0.0
+		lineageTag: fe86bb57-2c34-454a-b48e-c62678f67ea7
+		summarizeBy: sum
+		sourceColumn: median_income_tkr
+
+		annotation SummarizationSetBy = Automatic
+
+	column mean_income_tkr
+		dataType: double
+		isHidden
+		formatString: 0.0
+		lineageTag: 2e80845d-203b-4e5c-a20c-2db50c805661
+		summarizeBy: sum
+		sourceColumn: mean_income_tkr
+
+		annotation SummarizationSetBy = Automatic
+
+	column new_regs_per_1000_pop
+		dataType: double
+		isHidden
+		formatString: 0.00
+		lineageTag: bcbc5373-fee4-411c-b5fd-bd21b0d25b9d
+		summarizeBy: sum
+		sourceColumn: new_regs_per_1000_pop
+
+		annotation SummarizationSetBy = Automatic
+
+	column bev_fleet_per_1000_pop
+		dataType: double
+		isHidden
+		formatString: 0.00
+		lineageTag: b3c85ef0-8fc4-4ffb-88d5-2ca60c1fb644
+		summarizeBy: sum
+		sourceColumn: bev_fleet_per_1000_pop
+
+		annotation SummarizationSetBy = Automatic
+
+	column median_income_lag_tkr
+		dataType: double
+		isHidden
+		formatString: 0.0
+		lineageTag: 9052d480-21ef-4e89-a73a-60d50b473cb9
+		summarizeBy: sum
+		sourceColumn: median_income_lag_tkr
+
+		annotation SummarizationSetBy = Automatic
+
+	partition county_year_panel = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "county_year_panel.csv"), [Delimiter=",", Columns=25, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"county_code", type text}, {"county_name", type text}, {"year", Int64.Type}, {"new_regs_total", Int64.Type}, {"new_bev", Int64.Type}, {"new_phev", Int64.Type}, {"bev_share_all_owners", type number}, {"phev_share_all_owners", type number}, {"fleet_total", Int64.Type}, {"fleet_bev", Int64.Type}, {"fleet_bev_share", type number}, {"private_new_regs", Int64.Type}, {"private_bev_share", type number}, {"company_new_regs", Int64.Type}, {"company_bev_share", type number}, {"private_phev_share", type number}, {"private_owner_pct", type number}, {"population", Int64.Type}, {"land_km2", type number}, {"pop_per_km2", type number}, {"median_income_tkr", type number}, {"mean_income_tkr", type number}, {"new_regs_per_1000_pop", type number}, {"bev_fleet_per_1000_pop", type number}, {"median_income_lag_tkr", type number}})
+				in
+					#"Changed Type"
+
+	annotation PBI_ResultType = Table
+

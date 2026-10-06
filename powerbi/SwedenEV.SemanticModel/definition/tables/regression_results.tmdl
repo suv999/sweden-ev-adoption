@@ -1,0 +1,70 @@
+table regression_results
+	lineageTag: 734baca6-074c-4e97-b0ba-01f722154da3
+
+	column term
+		dataType: string
+		lineageTag: 32428588-c470-4df5-942d-99afb65c051e
+		summarizeBy: none
+		sourceColumn: term
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column coefficient
+		dataType: double
+		formatString: +0.00" pp";-0.00" pp";0.00" pp"
+		lineageTag: 61f7a1db-5a4f-47b7-8219-0719ae2b23ff
+		summarizeBy: none
+		sourceColumn: coefficient
+
+		annotation SummarizationSetBy = Automatic
+
+	column std_error
+		dataType: double
+		formatString: 0.00
+		lineageTag: 411689ec-52c6-4844-ac31-953b6b52fcba
+		summarizeBy: none
+		sourceColumn: std_error
+
+		annotation SummarizationSetBy = Automatic
+
+	column p_value
+		dataType: double
+		formatString: 0.000
+		lineageTag: ad09c89b-eda7-44f3-abfc-2eacd9c4be51
+		summarizeBy: none
+		sourceColumn: p_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column interpretation
+		dataType: string
+		lineageTag: 1b3ae827-2ac1-46ec-9afc-74c2389c598c
+		summarizeBy: none
+		sourceColumn: interpretation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dd9ef3b7-447b-4a0b-a95a-8bc85612a0dc
+		summarizeBy: sum
+		sourceColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition regression_results = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "regression_results.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"term", type text}, {"coefficient", type number}, {"std_error", type number}, {"p_value", type number}, {"interpretation", type text}}),
+					#"Added Index" = Table.AddIndexColumn(#"Changed Type", "Order", 1, 1, Int64.Type)
+				in
+					#"Added Index"
+
+	annotation PBI_ResultType = Table
+

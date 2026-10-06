@@ -18,3 +18,15 @@ relationship a95b0fb4-afdf-4fdb-b651-dc00bbc9b7ce
 	fromColumn: national_monthly_long.fuel_type
 	toColumn: dim_fuel.fuel_type
 
+relationship 3c6f2a8e-71d4-4b9a-a5e2-0f8d6c1b2e47
+	fromColumn: dim_date.Year
+	toColumn: dim_year.Year
+
+relationship 9d1e4b7a-2c3f-4e8d-b6a1-5f7c0e9d3a28
+	fromColumn: county_year_panel.year
+	toColumn: dim_year.Year
+
+relationship e5a7c3d9-8b2f-4a6e-9c1d-7b3e5f2a0c64
+	fromColumn: county_year_panel.county_code
+	toColumn: dim_county.county_code
+
