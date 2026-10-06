@@ -1,0 +1,86 @@
+table forecast_annual
+
+	column scenario
+		dataType: string
+		summarizeBy: none
+		sourceColumn: scenario
+		sortByColumn: scenario_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column scenario_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: scenario_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column assumption
+		dataType: string
+		summarizeBy: none
+		sourceColumn: assumption
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column median
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		summarizeBy: none
+		sourceColumn: median
+
+		annotation SummarizationSetBy = Automatic
+
+	column p10
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		summarizeBy: none
+		sourceColumn: p10
+
+		annotation SummarizationSetBy = Automatic
+
+	column p90
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		summarizeBy: none
+		sourceColumn: p90
+
+		annotation SummarizationSetBy = Automatic
+
+	column p2_5
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		summarizeBy: none
+		sourceColumn: p2_5
+
+		annotation SummarizationSetBy = Automatic
+
+	column p97_5
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		summarizeBy: none
+		sourceColumn: p97_5
+
+		annotation SummarizationSetBy = Automatic
+
+	partition forecast_annual = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "forecast_annual.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"scenario", type text}, {"scenario_order", Int64.Type}, {"assumption", type text}, {"year", Int64.Type}, {"median", type number}, {"p10", type number}, {"p90", type number}, {"p2_5", type number}, {"p97_5", type number}})
+				in
+					#"Changed Type"
+
+	annotation PBI_ResultType = Table
+

@@ -221,6 +221,50 @@ table _Measures
 		displayFolder: Regional
 		lineageTag: ae103236-b15b-44aa-af4d-58d99bdff5d2
 
+	/// Private buyers' BEV share over the 12 months to the last month in context (ratio of sums).
+	measure 'Private BEV Share Rolling 12M' = CALCULATE ( [BEV Share Rolling 12M], fact_county_monthly[owner_type] = "private" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Notebook 04 Plateau scenario (central case): median rolling 12-month private BEV share.
+	measure 'Forecast R12 Plateau' = CALCULATE ( AVERAGE ( forecast_monthly[p50] ), forecast_monthly[scenario] = "Plateau" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Plateau scenario: 10th percentile of the rolling 12-month private BEV share (80% band, lower edge).
+	measure 'Forecast R12 Plateau Low' = CALCULATE ( AVERAGE ( forecast_monthly[p10] ), forecast_monthly[scenario] = "Plateau" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Plateau scenario: 90th percentile of the rolling 12-month private BEV share (80% band, upper edge).
+	measure 'Forecast R12 Plateau High' = CALCULATE ( AVERAGE ( forecast_monthly[p90] ), forecast_monthly[scenario] = "Plateau" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Notebook 04 Reversion scenario (downside): median rolling 12-month private BEV share.
+	measure 'Forecast R12 Reversion' = CALCULATE ( AVERAGE ( forecast_monthly[p50] ), forecast_monthly[scenario] = "Reversion" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Notebook 04 Momentum scenario (upside): median rolling 12-month private BEV share.
+	measure 'Forecast R12 Momentum' = CALCULATE ( AVERAGE ( forecast_monthly[p50] ), forecast_monthly[scenario] = "Momentum" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Full-year 2026 private BEV share, central (Plateau) scenario: Jan-Aug actual plus Sep-Dec forecast.
+	measure 'Forecast 2026 Private BEV Share' = CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Plateau", forecast_annual[year] = 2026 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Full-year 2028 private BEV share, central (Plateau) scenario median.
+	measure 'Forecast 2028 Private BEV Share' = CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Plateau", forecast_annual[year] = 2028 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+
+	/// Range of the three scenario medians for 2028 (downside to upside), as text.
+	measure 'Forecast 2028 Scenario Range' = FORMAT ( CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Reversion", forecast_annual[year] = 2028 ), "0%" ) & "–" & FORMAT ( CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Momentum", forecast_annual[year] = 2028 ), "0%" )
+		displayFolder: Forecast
+
 	column Value
 		dataType: int64
 		isHidden

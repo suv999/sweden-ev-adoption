@@ -11,7 +11,7 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["DataFolder","national_monthly_long","fact_county_monthly","dim_county","county_year_panel","regression_results","regional_key_numbers"]
+annotation PBI_QueryOrder = ["DataFolder","national_monthly_long","fact_county_monthly","dim_county","county_year_panel","regression_results","regional_key_numbers","forecast_monthly","forecast_annual"]
 
 ref table national_monthly_long
 ref table fact_county_monthly
@@ -23,6 +23,8 @@ ref table dim_year
 ref table county_year_panel
 ref table regression_results
 ref table regional_key_numbers
+ref table forecast_monthly
+ref table forecast_annual
 
 ref cultureInfo en-US
 

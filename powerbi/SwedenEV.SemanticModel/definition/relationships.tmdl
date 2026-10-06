@@ -30,3 +30,7 @@ relationship e5a7c3d9-8b2f-4a6e-9c1d-7b3e5f2a0c64
 	fromColumn: county_year_panel.county_code
 	toColumn: dim_county.county_code
 
+relationship 6b2d9f41-c8e3-4a75-9d16-2e0f7a8c5b93
+	fromColumn: forecast_monthly.month
+	toColumn: dim_date.Date
+
