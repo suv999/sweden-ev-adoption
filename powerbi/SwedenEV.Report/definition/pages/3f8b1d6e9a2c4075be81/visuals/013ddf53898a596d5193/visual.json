@@ -1,0 +1,147 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "013ddf53898a596d5193",
+  "position": {
+    "x": 24,
+    "y": 434,
+    "z": 3000,
+    "height": 262,
+    "width": 800,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "regression_results"
+                    }
+                  },
+                  "Property": "term"
+                }
+              },
+              "queryRef": "regression_results.term",
+              "nativeQueryRef": "term",
+              "displayName": "Term"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "regression_results"
+                    }
+                  },
+                  "Property": "coefficient"
+                }
+              },
+              "queryRef": "regression_results.coefficient",
+              "nativeQueryRef": "coefficient",
+              "displayName": "Effect"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "regression_results"
+                    }
+                  },
+                  "Property": "p_value"
+                }
+              },
+              "queryRef": "regression_results.p_value",
+              "nativeQueryRef": "p_value",
+              "displayName": "p-value"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "regression_results"
+                    }
+                  },
+                  "Property": "interpretation"
+                }
+              },
+              "queryRef": "regression_results.interpretation",
+              "nativeQueryRef": "interpretation",
+              "displayName": "What it means"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Income is the only consistent level effect; density matters for the post-bonus swing'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'County panel 2021–2025, year fixed effects, county-clustered SEs (notebook 02)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
