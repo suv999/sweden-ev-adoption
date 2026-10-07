@@ -349,7 +349,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Rolling 12-month private BEV share: actual to Aug 2026, then scenario medians; light blue = Plateau 80% band'"
+                  "Value": "'Rolling 12-month private BEV share: actual to Aug 2026, then scenario medians'"
                 }
               }
             }

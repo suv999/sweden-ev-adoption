@@ -180,7 +180,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Annual private BEV share (ratio of sums), median and 80% interval of 2,000 simulations'"
+                  "Value": "'Annual share: median and 80% interval'"
                 }
               }
             }

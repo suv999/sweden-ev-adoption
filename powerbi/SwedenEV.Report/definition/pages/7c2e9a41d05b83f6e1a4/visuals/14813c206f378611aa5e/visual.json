@@ -127,7 +127,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopLeft'"
+                  "Value": "'BottomCenter'"
                 }
               }
             },
@@ -235,7 +235,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Private vs company BEV share by county; company cars count in the lessor''s county'"
+                  "Value": "'Company cars count in the lessor''s county'"
                 }
               }
             }

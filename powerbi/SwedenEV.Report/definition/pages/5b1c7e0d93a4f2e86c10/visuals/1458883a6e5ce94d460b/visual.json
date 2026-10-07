@@ -184,7 +184,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Average new registrations per calendar month, 2021–2026 (filtered by Owner type)'"
+                  "Value": "'Avg registrations by calendar month, 2021–26; follows Owner type'"
                 }
               }
             }
