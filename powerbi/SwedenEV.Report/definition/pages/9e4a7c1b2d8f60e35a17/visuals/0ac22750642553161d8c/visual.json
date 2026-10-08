@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "0ac22750642553161d8c",
+  "position": {
+    "x": 24,
+    "y": 88,
+    "z": 1000,
+    "height": 110,
+    "width": 400,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Forecast 2026 Private BEV Share"
+                }
+              },
+              "queryRef": "_Measures.Forecast 2026 Private BEV Share",
+              "nativeQueryRef": "Forecast 2026 Private BEV Share",
+              "displayName": "2026 private BEV share (Jan–Aug actual + forecast)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

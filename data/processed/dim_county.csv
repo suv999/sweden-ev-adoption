@@ -1,0 +1,23 @@
+county_code,county_name,county_name_sv,land_km2
+01,Stockholm,Stockholms län,6547.93
+03,Uppsala,Uppsala län,8230.52
+04,Södermanland,Södermanlands län,6096.7
+05,Östergötland,Östergötlands län,10603.05
+06,Jönköping,Jönköpings län,10480.23
+07,Kronoberg,Kronobergs län,8457.96
+08,Kalmar,Kalmar län,11206.0
+09,Gotland,Gotlands län,3150.2
+10,Blekinge,Blekinge län,2942.9
+12,Skåne,Skåne län,11006.76
+13,Halland,Hallands län,5450.85
+14,Västra Götaland,Västra Götalands län,23914.09
+17,Värmland,Värmlands län,17613.35
+18,Örebro,Örebro län,8542.73
+19,Västmanland,Västmanlands län,5141.05
+20,Dalarna,Dalarnas län,28172.33
+21,Gävleborg,Gävleborgs län,18207.77
+22,Västernorrland,Västernorrlands län,21673.6
+23,Jämtland,Jämtlands län,49205.47
+24,Västerbotten,Västerbottens län,55012.96
+25,Norrbotten,Norrbottens län,97972.73
+99,Unknown,Okänt län,

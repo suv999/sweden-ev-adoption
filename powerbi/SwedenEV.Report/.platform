@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "SwedenEV"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fc0678be-7b21-482b-9e20-1419f286e96e"
+  }
+}

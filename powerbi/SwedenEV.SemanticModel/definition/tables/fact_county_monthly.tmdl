@@ -1,0 +1,63 @@
+table fact_county_monthly
+	lineageTag: 57961942-b847-4baa-ad49-b961cbf48492
+
+	column month
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 2f58d624-2cd8-455f-90ea-a9baf4755fa5
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column county_code
+		dataType: string
+		isHidden
+		lineageTag: e3c6cce4-76ad-4945-b216-9702467c1dea
+		summarizeBy: none
+		sourceColumn: county_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_type
+		dataType: string
+		isHidden
+		lineageTag: 4524bb10-28b8-4b7f-bd9a-d7658ee48494
+		summarizeBy: none
+		sourceColumn: fuel_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column owner_type
+		dataType: string
+		lineageTag: 88e49313-d47c-47e1-a409-37ffb90ce440
+		summarizeBy: none
+		sourceColumn: owner_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column registrations
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 51761e73-2145-4eaa-b0d5-0e1b84834f51
+		summarizeBy: sum
+		sourceColumn: registrations
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_county_monthly = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "fact_county_monthly.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"month", type date}, {"county_code", type text}, {"fuel_type", type text}, {"owner_type", type text}, {"registrations", Int64.Type}})
+				in
+					#"Changed Type"
+
+	annotation PBI_ResultType = Table
+

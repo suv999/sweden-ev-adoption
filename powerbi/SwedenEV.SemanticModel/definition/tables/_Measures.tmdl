@@ -1,0 +1,290 @@
+table _Measures
+	lineageTag: 835259e2-db53-4039-b6d3-818217ee8c78
+
+	/// New passenger-car registrations (county fact, 2021 onwards, all owners unless filtered).
+	measure Registrations = SUM ( fact_county_monthly[registrations] )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: 7606a554-d3cc-4ab8-8cbb-b6201abc743d
+
+	/// Battery-electric registrations; ignores the fuel slicer.
+	measure 'BEV Registrations' = CALCULATE ( [Registrations], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "BEV" )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: 36781c99-0380-4a9c-b94c-521cc952d372
+
+	/// All registrations in the current context with fuel filters removed (share denominator).
+	measure 'Registrations All Fuels' = CALCULATE ( [Registrations], REMOVEFILTERS ( fact_county_monthly[fuel_type] ), REMOVEFILTERS ( dim_fuel ) )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: a6c6a486-c1c2-4321-8518-140fd2ce78c0
+
+	/// BEV registrations / all registrations (all 8 fuels), ratio of sums.
+	measure 'BEV Share' = DIVIDE ( [BEV Registrations], [Registrations All Fuels] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: a3e2a973-60a2-423a-8582-cffdf8d149d4
+
+	/// PHEV registrations / all registrations (all 8 fuels), ratio of sums.
+	measure 'PHEV Share' = DIVIDE ( CALCULATE ( [Registrations], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "PHEV" ), [Registrations All Fuels] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 5b753265-4bca-40d2-a837-5559b891e4b3
+
+	/// BEV + PHEV registrations / all registrations; labelled plug-in, never the headline.
+	measure 'Plug-in Share' = DIVIDE ( CALCULATE ( [Registrations], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] IN { "BEV", "PHEV" } ), [Registrations All Fuels] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: dbac54bf-d5cb-4142-a6d3-3964224eec57
+
+	/// BEV share among private buyers (owner_type = private), the headline metric.
+	measure 'Private BEV Share' = CALCULATE ( [BEV Share], fact_county_monthly[owner_type] = "private" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 1681059e-7f6b-4139-a301-41ae7bcd1b3c
+
+	/// BEV share among company/leasing buyers (owner_type = company).
+	measure 'Company BEV Share' = CALCULATE ( [BEV Share], fact_county_monthly[owner_type] = "company" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 22e6bcef-02f1-4e79-9d81-43a5a2b829ef
+
+	/// BEV share for the same months one year earlier, capped at the last month with data (so Jan-Aug 2026 compares with Jan-Aug 2025).
+	measure 'BEV Share PY' =
+			VAR LastDay = EOMONTH ( CALCULATE ( MAX ( fact_county_monthly[month] ), REMOVEFILTERS () ), 0 )
+			VAR Shifted =
+				SELECTCOLUMNS (
+					FILTER ( VALUES ( dim_date[Date] ), dim_date[Date] <= LastDay ),
+					"Date", EDATE ( dim_date[Date], -12 )
+				)
+			RETURN
+				CALCULATE ( [BEV Share], REMOVEFILTERS ( dim_date ), TREATAS ( Shifted, dim_date[Date] ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: 30d40d73-4e27-454a-b073-46fbc787bf3a
+
+	/// Change in BEV share versus the same period a year earlier, in pp; with no date filter it compares the latest year to date.
+	measure 'BEV Share YoY (pp)' =
+			VAR LatestYear = YEAR ( CALCULATE ( MAX ( fact_county_monthly[month] ), REMOVEFILTERS () ) )
+			VAR DateFiltered = ISCROSSFILTERED ( dim_date )
+			VAR Cur = IF ( DateFiltered, [BEV Share], CALCULATE ( [BEV Share], dim_date[Year] = LatestYear ) )
+			VAR Prev = IF ( DateFiltered, [BEV Share PY], CALCULATE ( [BEV Share PY], dim_date[Year] = LatestYear ) )
+			RETURN
+				IF ( ISBLANK ( Cur ) || ISBLANK ( Prev ), BLANK (), ( Cur - Prev ) * 100 )
+		formatString: +0.0" pp";-0.0" pp";0.0" pp"
+		displayFolder: County fact
+		lineageTag: 7be412dc-809d-486b-9b61-96d58ddaa936
+
+	/// BEV share over the 12 months ending at the last month with data in context (ratio of sums).
+	measure 'BEV Share Rolling 12M' =
+			VAR LastM = CALCULATE ( MAX ( fact_county_monthly[month] ), REMOVEFILTERS ( dim_fuel ) )
+			VAR FirstM = CALCULATE ( MIN ( fact_county_monthly[month] ), REMOVEFILTERS () )
+			RETURN
+				IF (
+					NOT ( ISBLANK ( LastM ) ) && EDATE ( FirstM, 11 ) <= LastM,
+					CALCULATE (
+						[BEV Share],
+						REMOVEFILTERS ( dim_date ),
+						DATESINPERIOD ( dim_date[Date], EOMONTH ( LastM, 0 ), -12, MONTH )
+					)
+				)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: County fact
+		lineageTag: d9a3bd95-020f-4ebe-93d3-fdf8370a7a93
+
+	/// Average registrations per month across the months in context (seasonality).
+	measure 'Avg Monthly Registrations' = AVERAGEX ( VALUES ( dim_date[YearMonth] ), [Registrations] )
+		formatString: #,0
+		displayFolder: County fact
+		lineageTag: 5349ad1b-084f-427e-a399-fbab749c93d7
+
+	/// New registrations from the national series (2006 onwards, all owners).
+	measure 'National Registrations' = SUM ( national_monthly_long[registrations] )
+		formatString: #,0
+		displayFolder: National
+		lineageTag: 3347d52e-b167-4536-8521-d32772c4cad6
+
+	/// Fuel's share of national registrations (all owners), ratio of sums; use with dim_fuel on the legend.
+	measure 'National Share' = DIVIDE ( [National Registrations], CALCULATE ( [National Registrations], REMOVEFILTERS ( national_monthly_long[fuel_type] ), REMOVEFILTERS ( dim_fuel ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: National
+		lineageTag: 410dd3b3-3a74-48dc-90a5-f03473b9b653
+
+	/// BEV share of national registrations, all owners, 2006 onwards.
+	measure 'National BEV Share' = CALCULATE ( [National Share], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "BEV" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: National
+		lineageTag: cc89f723-f114-43ce-926c-77a651a63d5b
+
+	/// PHEV share of national registrations, all owners, 2006 onwards.
+	measure 'National PHEV Share' = CALCULATE ( [National Share], REMOVEFILTERS ( dim_fuel ), dim_fuel[fuel_type] = "PHEV" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: National
+		lineageTag: 8e027dbe-a9d2-46bf-9086-5e797929de2a
+
+	/// Rank of the county by private BEV share among the counties in the current selection (1 = highest).
+	measure 'County Rank (Private BEV Share)' =
+			VAR Counties = CALCULATETABLE ( VALUES ( dim_county[county_name] ), ALLSELECTED ( dim_county ), KEEPFILTERS ( dim_county[region] <> "" ) )
+			RETURN
+				IF (
+					HASONEVALUE ( dim_county[county_name] ) && NOT ISBLANK ( [Private BEV Share] ),
+					RANKX ( Counties, [Private BEV Share], , DESC, DENSE )
+				)
+		formatString: 0
+		displayFolder: Regional
+		lineageTag: 07aaf85b-4f49-437a-8c78-09f21ef57745
+
+	/// Private BEV share minus company BEV share, in percentage points.
+	measure 'Private–Company BEV Gap (pp)' =
+			VAR P = [Private BEV Share]
+			VAR C = [Company BEV Share]
+			RETURN
+				IF ( ISBLANK ( P ) || ISBLANK ( C ), BLANK (), ( P - C ) * 100 )
+		formatString: +0.0" pp";-0.0" pp";0.0" pp"
+		displayFolder: Regional
+		lineageTag: 2eda36cd-aa29-493b-90cf-dbad2d5e9eb2
+
+	/// Private buyers' share of all new registrations (ratio of sums).
+	measure 'Private Owner %' = DIVIDE ( CALCULATE ( [Registrations], fact_county_monthly[owner_type] = "private" ), CALCULATE ( [Registrations], REMOVEFILTERS ( fact_county_monthly[owner_type] ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Regional
+		lineageTag: 694b283f-0e5c-46a8-b8aa-a86a36dc2fdc
+
+	/// Battery-electric cars in traffic at year end per 1,000 inhabitants (ratio of sums).
+	measure 'BEV Fleet per 1,000 Inhabitants' = DIVIDE ( SUM ( county_year_panel[fleet_bev] ), SUM ( county_year_panel[population] ) ) * 1000
+		formatString: 0.0
+		displayFolder: Regional
+		lineageTag: c1812d6f-9e7c-424d-b554-98b788b78d14
+
+	/// Median earned income age 20-64 in the previous year (t-1, as in notebook 02), thousand SEK.
+	measure 'Median Income (tkr)' = AVERAGE ( county_year_panel[median_income_lag_tkr] )
+		formatString: 0
+		displayFolder: Regional
+		lineageTag: a16125a1-8641-43d0-96d8-9d6cbf2279ca
+
+	/// Population, averaged over the selected years.
+	measure Population = AVERAGEX ( VALUES ( county_year_panel[year] ), CALCULATE ( SUM ( county_year_panel[population] ) ) )
+		formatString: #,0
+		displayFolder: Regional
+		lineageTag: 9d6f8845-a93e-47e8-a6dc-4f9aa006f794
+
+	/// Inhabitants per km² of land (ratio of sums).
+	measure 'Population Density' = DIVIDE ( SUM ( county_year_panel[population] ), SUM ( county_year_panel[land_km2] ) )
+		formatString: #,0.0
+		displayFolder: Regional
+		lineageTag: 0bc6dbd0-ad79-47d8-a292-6801a327585e
+
+	/// County with the highest private BEV share in the selection, with its share (ties at 0.1% are listed together).
+	measure 'Top County (Private BEV Share)' =
+			VAR Scored =
+				FILTER (
+					ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_county[county_name] ), KEEPFILTERS ( dim_county[region] <> "" ) ), "@share", [Private BEV Share] ),
+					NOT ISBLANK ( [@share] )
+				)
+			VAR Best = MAXX ( Scored, [@share] )
+			RETURN
+				IF (
+					NOT ISBLANK ( Best ),
+					CONCATENATEX ( FILTER ( Scored, ROUND ( [@share], 3 ) = ROUND ( Best, 3 ) ), dim_county[county_name], " & ", dim_county[county_name] )
+						& " · " & FORMAT ( Best, "0.0%" )
+				)
+		displayFolder: Regional
+		lineageTag: 573397fb-89e7-40da-8881-e7b5e3b8688f
+
+	/// County with the lowest private BEV share in the selection, with its share (ties at 0.1% are listed together).
+	measure 'Bottom County (Private BEV Share)' =
+			VAR Scored =
+				FILTER (
+					ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_county[county_name] ), KEEPFILTERS ( dim_county[region] <> "" ) ), "@share", [Private BEV Share] ),
+					NOT ISBLANK ( [@share] )
+				)
+			VAR Worst = MINX ( Scored, [@share] )
+			RETURN
+				IF (
+					NOT ISBLANK ( Worst ),
+					CONCATENATEX ( FILTER ( Scored, ROUND ( [@share], 3 ) = ROUND ( Worst, 3 ) ), dim_county[county_name], " & ", dim_county[county_name] )
+						& " · " & FORMAT ( Worst, "0.0%" )
+				)
+		displayFolder: Regional
+		lineageTag: 255903f0-1310-4b16-bb5b-5c7dd4e12eb0
+
+	/// Highest minus lowest county private BEV share in the selection, in percentage points.
+	measure 'Top–Bottom County Gap (pp)' =
+			VAR Scored =
+				FILTER (
+					ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_county[county_name] ), KEEPFILTERS ( dim_county[region] <> "" ) ), "@share", [Private BEV Share] ),
+					NOT ISBLANK ( [@share] )
+				)
+			RETURN
+				IF ( COUNTROWS ( Scored ) > 1, ( MAXX ( Scored, [@share] ) - MINX ( Scored, [@share] ) ) * 100 )
+		formatString: 0.0" pp"
+		displayFolder: Regional
+		lineageTag: ae103236-b15b-44aa-af4d-58d99bdff5d2
+
+	/// Private buyers' BEV share over the 12 months to the last month in context (ratio of sums).
+	measure 'Private BEV Share Rolling 12M' = CALCULATE ( [BEV Share Rolling 12M], fact_county_monthly[owner_type] = "private" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 28edbf74-bf4f-43c4-a8be-67b4bf97fcbb
+
+	/// Notebook 04 Plateau scenario (central case): median rolling 12-month private BEV share.
+	measure 'Forecast R12 Plateau' = CALCULATE ( AVERAGE ( forecast_monthly[p50] ), forecast_monthly[scenario] = "Plateau" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 0226c7c4-85ae-43fa-952d-dd42a2e3dbd2
+
+	/// Plateau scenario: 10th percentile of the rolling 12-month private BEV share (80% band, lower edge).
+	measure 'Forecast R12 Plateau Low' = CALCULATE ( AVERAGE ( forecast_monthly[p10] ), forecast_monthly[scenario] = "Plateau" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 91a8afde-7286-474d-a532-c497512f5738
+
+	/// Plateau scenario: 90th percentile of the rolling 12-month private BEV share (80% band, upper edge).
+	measure 'Forecast R12 Plateau High' = CALCULATE ( AVERAGE ( forecast_monthly[p90] ), forecast_monthly[scenario] = "Plateau" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 3924b1ef-e6b9-4c68-90c9-712f8289620b
+
+	/// Notebook 04 Reversion scenario (downside): median rolling 12-month private BEV share.
+	measure 'Forecast R12 Reversion' = CALCULATE ( AVERAGE ( forecast_monthly[p50] ), forecast_monthly[scenario] = "Reversion" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 4c76af7d-2560-4548-8a37-6d5b98f259a2
+
+	/// Notebook 04 Momentum scenario (upside): median rolling 12-month private BEV share.
+	measure 'Forecast R12 Momentum' = CALCULATE ( AVERAGE ( forecast_monthly[p50] ), forecast_monthly[scenario] = "Momentum" )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 9e987fb5-923d-45a0-a2f2-7f0252b19935
+
+	/// Full-year 2026 private BEV share, central (Plateau) scenario: Jan-Aug actual plus Sep-Dec forecast.
+	measure 'Forecast 2026 Private BEV Share' = CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Plateau", forecast_annual[year] = 2026 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: eb5716d9-8e7e-496d-bf5f-df62e0b7b31c
+
+	/// Full-year 2028 private BEV share, central (Plateau) scenario median.
+	measure 'Forecast 2028 Private BEV Share' = CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Plateau", forecast_annual[year] = 2028 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Forecast
+		lineageTag: 5f366ad7-46c6-4712-91c6-70b75fd7b17e
+
+	/// Range of the three scenario medians for 2028 (downside to upside), as text.
+	measure 'Forecast 2028 Scenario Range' = FORMAT ( CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Reversion", forecast_annual[year] = 2028 ), "0%" ) & "–" & FORMAT ( CALCULATE ( AVERAGE ( forecast_annual[median] ), forecast_annual[scenario] = "Momentum", forecast_annual[year] = 2028 ), "0%" )
+		displayFolder: Forecast
+		lineageTag: 787f51a5-c05c-428e-a79c-611f6621d409
+
+	column Value
+		dataType: int64
+		isHidden
+		lineageTag: 46d3d583-df62-4d33-a069-db044989fd25
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = { BLANK () }
+

@@ -1,0 +1,48 @@
+table dim_county
+	lineageTag: ed32d19a-4904-4e86-92bc-1b7c767b6d32
+
+	column county_code
+		dataType: string
+		lineageTag: 33681ee9-528c-4125-9ada-bc5a5f741b52
+		summarizeBy: none
+		sourceColumn: county_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column county_name
+		dataType: string
+		lineageTag: 46cd0f99-5579-4837-926e-d60d37751c93
+		summarizeBy: none
+		sourceColumn: county_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column map_name
+		dataType: string
+		lineageTag: f1923bab-2812-4e22-8eb6-a678cfcc3476
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: map_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: f148ac51-c058-475f-9169-f00e564bf417
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_county = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "dim_county.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"county_code", type text}, {"county_name", type text}, {"map_name", type text}, {"region", type text}})
+				in
+					#"Changed Type"
+
+	annotation PBI_ResultType = Table
+

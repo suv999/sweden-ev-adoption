@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "7cf4b81900e40baf4fc5",
+  "position": {
+    "x": 856,
+    "y": 88,
+    "z": 1002,
+    "height": 110,
+    "width": 400,
+    "tabOrder": 1002
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Forecast 2028 Scenario Range"
+                }
+              },
+              "queryRef": "_Measures.Forecast 2028 Scenario Range",
+              "nativeQueryRef": "Forecast 2028 Scenario Range",
+              "displayName": "2028 range across scenarios (downside–upside)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SwedenEV"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "92f9fb07-9599-4403-9812-0e7903de1343"
+  }
+}

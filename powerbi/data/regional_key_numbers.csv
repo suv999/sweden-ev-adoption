@@ -1,0 +1,5 @@
+metric,value,unit,note
+"County spread in private BEV share, 2025",11.0,pp,Halland 35.3% (highest) vs Värmland 24.3% (lowest); mid-table ranks are within noise
+Stockholm's share of company registrations,50.8,%,vs 23.1% of private registrations: leasing cars are booked to the lessor's county
+Variation explained by year alone,74.0,%,R² of county BEV share on year effects; income and density add ~3 points
+Extra post-bonus fall per halving of density,0.9,pp,"Change 2022→2024, controlling for income; sparse counties reacted more to the bonus ending"

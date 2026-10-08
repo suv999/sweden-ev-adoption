@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "0abaefcceb800c2da1ab",
+  "position": {
+    "x": 24,
+    "y": 88,
+    "z": 3000,
+    "height": 110,
+    "width": 296,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "BEV Share Rolling 12M"
+                }
+              },
+              "queryRef": "_Measures.BEV Share Rolling 12M",
+              "nativeQueryRef": "BEV Share Rolling 12M",
+              "displayName": "BEV share, rolling 12M (all owners)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

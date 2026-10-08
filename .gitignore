@@ -1,3 +1,24 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated database (rebuild with src/build_dataset.py)
+data/ev_sweden.sqlite
+
+# Power BI project caches / per-user settings
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.vscode/
+
+# ---- GitHub Python template (from the repo's initial commit) ----
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

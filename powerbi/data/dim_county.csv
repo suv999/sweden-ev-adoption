@@ -1,0 +1,23 @@
+county_code,county_name,map_name,region
+01,Stockholm,"Stockholm County, Sweden",Rest of Sweden
+03,Uppsala,"Uppsala County, Sweden",Rest of Sweden
+04,Södermanland,"Södermanland County, Sweden",Rest of Sweden
+05,Östergötland,"Östergötland County, Sweden",Rest of Sweden
+06,Jönköping,"Jönköping County, Sweden",Rest of Sweden
+07,Kronoberg,"Kronoberg County, Sweden",Rest of Sweden
+08,Kalmar,"Kalmar County, Sweden",Rest of Sweden
+09,Gotland,"Gotland County, Sweden",Rest of Sweden
+10,Blekinge,"Blekinge County, Sweden",Rest of Sweden
+12,Skåne,"Skåne County, Sweden",Rest of Sweden
+13,Halland,"Halland County, Sweden",Rest of Sweden
+14,Västra Götaland,"Västra Götaland County, Sweden",Rest of Sweden
+17,Värmland,"Värmland County, Sweden",Rest of Sweden
+18,Örebro,"Örebro County, Sweden",Rest of Sweden
+19,Västmanland,"Västmanland County, Sweden",Rest of Sweden
+20,Dalarna,"Dalarna County, Sweden",Rest of Sweden
+21,Gävleborg,"Gävleborg County, Sweden",Norrland
+22,Västernorrland,"Västernorrland County, Sweden",Norrland
+23,Jämtland,"Jämtland County, Sweden",Norrland
+24,Västerbotten,"Västerbotten County, Sweden",Norrland
+25,Norrbotten,"Norrbotten County, Sweden",Norrland
+99,Unknown,,

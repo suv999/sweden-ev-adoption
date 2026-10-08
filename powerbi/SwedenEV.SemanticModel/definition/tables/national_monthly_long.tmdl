@@ -1,0 +1,46 @@
+table national_monthly_long
+	lineageTag: 90e0bc0b-46f4-4249-aaa8-31c9a6bcd903
+
+	column month
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 22bfc69f-af52-4076-bce9-5a4aaaafa27c
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column fuel_type
+		dataType: string
+		isHidden
+		lineageTag: 7025122c-af8e-4ad8-898c-331f41978981
+		summarizeBy: none
+		sourceColumn: fuel_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column registrations
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 575d7cd7-edef-4ea3-9a60-8e77fd4fadec
+		summarizeBy: sum
+		sourceColumn: registrations
+
+		annotation SummarizationSetBy = Automatic
+
+	partition national_monthly_long = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "national_monthly_long.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"month", type date}, {"fuel_type", type text}, {"registrations", Int64.Type}})
+				in
+					#"Changed Type"
+
+	annotation PBI_ResultType = Table
+
