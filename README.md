@@ -2,7 +2,7 @@
 
 **Private buyers' battery-electric (BEV) share went from 21% (2021) to 39% (2022). It fell back to 32% for 2024–25 after the bonus ended, and is ~41% in 2026. The central forecast for 2028 is ~42%, not the 60%+ the bonus-era trend implied.**
 
-![Power BI dashboard walkthrough](docs/dashboard.gif)
+![Power BI dashboard walkthrough](docs/docs_dashboard.gif)
 
 ## Key insights
 
